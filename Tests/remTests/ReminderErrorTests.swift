@@ -22,3 +22,9 @@ import Testing
 
     #expect(error is ReminderError)
 }
+
+@Test func 無効な日付形式エラーのメッセージを確認() {
+    let error = ReminderError.invalidDateFormat("abc123")
+
+    #expect(error.errorDescription == "無効な日付形式です: abc123")
+}
