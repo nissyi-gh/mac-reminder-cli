@@ -27,7 +27,7 @@ actor ReminderStore {
         return items
     }
 
-    func addReminder(title: String) async throws {
+    func addReminder(title: String, dueDate: Date? = nil) async throws {
         guard let calendar = store.defaultCalendarForNewReminders() else {
             throw ReminderError.noDefaultCalendar
         }
@@ -36,11 +36,17 @@ actor ReminderStore {
         reminder.title = title
         reminder.calendar = calendar
 
+        if let dueDate {
+            reminder.dueDateComponents = Calendar.current.dateComponents(
+                [.year, .month, .day, .hour, .minute],
+                from: dueDate
+            )
+        }
+
         do {
             try store.save(reminder, commit: true)
         } catch {
             throw ReminderError.saveFailed(error.localizedDescription)
         }
-
     }
 }
